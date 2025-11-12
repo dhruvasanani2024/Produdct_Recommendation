@@ -13,21 +13,15 @@ df = None
 tfidf = None
 tfidf_matrix = None
 indices = None
+CATEGORIES_URL = "https://raw.githubusercontent.com/dhruvasanani2024/Recommender_project_data/refs/heads/main/amazon_sample_category.csv"
+PRODUCTS_URL = "https://raw.githubusercontent.com/dhruvasanani2024/Recommender_project_data/refs/heads/main/amazon_sample_products.csv"
 
 # ============= MODEL BUILDER ============
 def load_and_build_model():
     global df, tfidf, tfidf_matrix, indices
 
-    app_dir = os.path.join(settings.BASE_DIR, "rec_app")
-    products_path = os.path.join(app_dir, "amazon_sample_products.csv")
-    categories_path = os.path.join(app_dir, "amazon_sample_category.csv")
-
-    if not os.path.exists(products_path) or not os.path.exists(categories_path):
-        print("❌ ERROR: CSV files not found")
-        return False
-
-    products = pd.read_csv(products_path)
-    categories = pd.read_csv(categories_path)
+    products = pd.read_csv(PRODUCTS_URL)
+    categories = pd.read_csv(CATEGORIES_URL)
 
     merged = products.merge(categories, left_on='category_id', right_on='id', how='inner')
     merged = merged[['asin', 'title', 'category_name', 'price', 'imgUrl']].dropna().reset_index(drop=True)
